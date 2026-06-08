@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Rol {
+  ADMIN
+  PARTICIPANTE
+}
+
+enum EstadoPartido {
+  PENDIENTE
+  EN_VIVO
+  FINALIZADO
+}
+
+model Usuario {
+  id           String   @id @default(cuid())
+  nombre       String
+  username     String   @unique
+  passwordHash String   @map("password_hash")
+  rol          Rol      @default(PARTICIPANTE)
+  fechaCreacion DateTime @default(now()) @map("fecha_creacion")
+
+  predicciones Prediccion[]
+  puntaje      Puntaje?
+
+  @@map("usuarios")
+}
+
+model Partido {
+  id              String        @id @default(cuid())
+  fechaHora       DateTime      @map("fecha_hora")
+  equipoLocal     String        @map("equipo_local")
+  equipoVisitante String        @map("equipo_visitante")
+  fase            String
+  grupo           String?
+  estado          EstadoPartido @default(PENDIENTE)
+  golesLocal      Int?          @map("goles_local")
+  golesVisitante  Int?          @map("goles_visitante")
+
+  predicciones    Prediccion[]
+
+  @@map("partidos")
+}
+
+model Prediccion {
+  id                    String   @id @default(cuid())
+  usuarioId             String   @map("usuario_id")
+  partidoId             String   @map("partido_id")
+  golesLocalPredicho    Int      @map("goles_local_predicho")
+  golesVisitantePredicho Int     @map("goles_visitante_predicho")
+  fechaPrediccion       DateTime @default(now()) @map("fecha_prediccion")
+  puntosObtenidos       Int?     @map("puntos_obtenidos")
+
+  usuario  Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  partido  Partido @relation(fields: [partidoId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, partidoId])
+  @@map("predicciones")
+}
+
+model Puntaje {
+  id                 String @id @default(cuid())
+  usuarioId          String @unique @map("usuario_id")
+  puntosTotales      Int    @default(0) @map("puntos_totales")
+  resultadosExactos  Int    @default(0) @map("resultados_exactos")
+  ganadoresAcertados Int    @default(0) @map("ganadores_acertados")
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@map("puntajes")
+}
