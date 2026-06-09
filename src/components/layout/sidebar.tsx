@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
   Home,
-  Trophy,
   ListChecks,
   History,
   Users,
@@ -14,11 +13,12 @@ import {
   BarChart3,
   Settings,
 } from "lucide-react"
+import { WorldCupTrophy } from "@/components/shared/world-cup-trophy"
 
 const participanteLinks = [
   { href: "/dashboard", label: "Inicio", icon: Home },
   { href: "/dashboard/predicciones", label: "Predicciones", icon: ListChecks },
-  { href: "/dashboard/ranking", label: "Ranking", icon: Trophy },
+  { href: "/dashboard/ranking", label: "Ranking", icon: WorldCupTrophy },
   { href: "/dashboard/historial", label: "Historial", icon: History },
 ]
 
@@ -97,7 +97,7 @@ export function Sidebar() {
     <aside className="hidden md:flex md:w-64 md:flex-col border-r bg-card">
       <div className="p-6 border-b">
         <h2 className="font-bold text-lg flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-yellow-500" />
+          <WorldCupTrophy size={24} className="text-yellow-500" />
           Polla Mundial
         </h2>
       </div>

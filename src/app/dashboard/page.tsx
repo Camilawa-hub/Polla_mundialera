@@ -7,7 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { formatFechaCorta, partidoBloqueado } from "@/lib/utils"
-import { Trophy, Target, Users, Clock, ArrowUp, ArrowDown } from "lucide-react"
+import { getBandera } from "@/lib/flags"
+import { WorldCupTrophy } from "@/components/shared/world-cup-trophy"
+import { Target, Users, Clock, ArrowUp, ArrowDown } from "lucide-react"
 
 export default function DashboardPage() {
   const { data: session } = useSession()
@@ -48,7 +50,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Mi Puntaje</CardTitle>
-            <Trophy className="h-4 w-4 text-yellow-500" />
+            <WorldCupTrophy size={18} className="text-yellow-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{miPuntaje?.puntosTotales ?? 0}</div>
@@ -111,9 +113,9 @@ export default function DashboardPage() {
                     className="flex items-center justify-between text-sm"
                   >
                     <div className="flex-1">
-                      <span className="font-medium">{partido.equipoLocal}</span>
+                      <span className="font-medium">{getBandera(partido.equipoLocal)} {partido.equipoLocal}</span>
                       <span className="text-muted-foreground mx-1">vs</span>
-                      <span className="font-medium">{partido.equipoVisitante}</span>
+                      <span className="font-medium">{getBandera(partido.equipoVisitante)} {partido.equipoVisitante}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge
@@ -149,11 +151,11 @@ export default function DashboardPage() {
                 {ultimosResultados.map((partido) => (
                   <div key={partido.id}>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{partido.equipoLocal}</span>
+                      <span className="font-medium">{getBandera(partido.equipoLocal)} {partido.equipoLocal}</span>
                       <span className="text-lg font-bold mx-2">
                         {partido.golesLocal} - {partido.golesVisitante}
                       </span>
-                      <span className="font-medium">{partido.equipoVisitante}</span>
+                      <span className="font-medium">{getBandera(partido.equipoVisitante)} {partido.equipoVisitante}</span>
                     </div>
                     <Separator className="mt-2" />
                   </div>
