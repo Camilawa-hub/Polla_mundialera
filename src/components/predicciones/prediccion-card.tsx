@@ -74,10 +74,9 @@ export function PrediccionCard({ partido, prediccion }: PrediccionCardProps) {
             )}
             {finalizado && estadoPuntaje && (
               <Badge variant="outline" className={estadoPuntaje.color}>
-                {prediccion?.puntosObtenidos === 4 && "🟢 "}
-                {prediccion?.puntosObtenidos === 3 && "🟡 "}
-                {prediccion?.puntosObtenidos === 2 && "🔵 "}
-                {prediccion?.puntosObtenidos === 1 && "🔴 "}
+                {prediccion?.puntosObtenidos === 3 && "🟢 "}
+                {prediccion?.puntosObtenidos === 1 && "🟡 "}
+                {prediccion?.puntosObtenidos === 0 && "🔴 "}
                 {prediccion?.puntosObtenidos} pts
               </Badge>
             )}
@@ -143,29 +142,19 @@ export function PrediccionCard({ partido, prediccion }: PrediccionCardProps) {
 
         {finalizado && prediccion && (
           <div className="flex justify-center items-center gap-2 text-sm">
-            {prediccion.puntosObtenidos === 4 && (
-              <span className="flex items-center gap-1 text-green-500">
-                <CheckCircle2 className="h-4 w-4" /> ¡Resultado exacto! +4 pts
-              </span>
-            )}
             {prediccion.puntosObtenidos === 3 && (
-              <span className="flex items-center gap-1 text-yellow-500">
-                <CheckCircle2 className="h-4 w-4" /> Ganador acertado +3 pts
-              </span>
-            )}
-            {prediccion.puntosObtenidos === 2 && (
-              <span className="flex items-center gap-1 text-blue-500">
-                Empate acertado +2 pts
+              <span className="flex items-center gap-1 text-green-500">
+                <CheckCircle2 className="h-4 w-4" /> ¡Resultado exacto! +3 pts
               </span>
             )}
             {prediccion.puntosObtenidos === 1 && (
-              <span className="flex items-center gap-1 text-red-500">
-                Resultado incorrecto +1 pt
+              <span className="flex items-center gap-1 text-yellow-500">
+                <CheckCircle2 className="h-4 w-4" /> Ganador/empate acertado +1 pt
               </span>
             )}
             {prediccion.puntosObtenidos === 0 && (
-              <span className="flex items-center gap-1 text-gray-500">
-                Sin puntos
+              <span className="flex items-center gap-1 text-red-500">
+                Resultado incorrecto
               </span>
             )}
           </div>

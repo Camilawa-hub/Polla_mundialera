@@ -7,15 +7,14 @@ export function calcularPuntos(
   golesVisitanteReal: number
 ): number {
   const exacto = golesLocalPred === golesLocalReal && golesVisitantePred === golesVisitanteReal
-  if (exacto) return 4
+  if (exacto) return 3
 
-  const diffPred = golesLocalPred - golesVisitantePred
-  const diffReal = golesLocalReal - golesVisitanteReal
+  const diffPred = Math.sign(golesLocalPred - golesVisitantePred)
+  const diffReal = Math.sign(golesLocalReal - golesVisitanteReal)
 
-  if (diffPred === 0 && diffReal === 0) return 2
-  if (Math.sign(diffPred) === Math.sign(diffReal) && diffPred !== 0) return 3
+  if (diffPred === diffReal) return 1
 
-  return 1
+  return 0
 }
 
 export async function recalcularPuntajes() {
@@ -51,13 +50,9 @@ export async function recalcularPuntajes() {
       })
 
       puntosTotales += puntos
-      if (puntos === 4) resultadosExactos++
-      if (puntos >= 3) ganadoresAcertados++
+      if (puntos === 3) resultadosExactos++
+      if (puntos >= 1) ganadoresAcertados++
     }
-
-    const partidosSinPrediccion = await prisma.partido.count({
-      where: { estado: "FINALIZADO", id: { notIn: usuario.predicciones.map((p) => p.partidoId) } },
-    })
 
     await prisma.puntaje.upsert({
       where: { usuarioId: usuario.id },

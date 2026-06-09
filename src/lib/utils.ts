@@ -36,9 +36,7 @@ export function getEstadoPuntaje(
   if (puntos === null || puntos === undefined) {
     return { label: "Sin jugar", color: "text-gray-400" }
   }
-  if (puntos === 4) return { label: "Resultado exacto", color: "text-green-500" }
-  if (puntos === 3) return { label: "Ganador acertado", color: "text-yellow-500" }
-  if (puntos === 2) return { label: "Empate acertado", color: "text-blue-500" }
-  if (puntos === 1) return { label: "Incorrecto", color: "text-red-500" }
-  return { label: "Sin puntos", color: "text-gray-400" }
+  if (puntos === 3) return { label: "Resultado exacto", color: "text-green-500" }
+  if (puntos === 1) return { label: "Ganador/empate acertado", color: "text-yellow-500" }
+  return { label: "Incorrecto", color: "text-red-500" }
 }
