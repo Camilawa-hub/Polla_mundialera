@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { formatFechaCorta, partidoBloqueado } from "@/lib/utils"
-import { getBandera } from "@/lib/flags"
+import { Flag } from "@/components/shared/flag"
 import { WorldCupTrophy } from "@/components/shared/world-cup-trophy"
 import { Target, Users, Clock, ArrowUp, ArrowDown, HelpCircle } from "lucide-react"
 
@@ -126,9 +126,9 @@ export default function DashboardPage() {
                     className="flex items-center justify-between text-sm"
                   >
                     <div className="flex-1">
-                      <span className="font-medium">{getBandera(partido.equipoLocal)} {partido.equipoLocal}</span>
+                      <span className="font-medium"><Flag pais={partido.equipoLocal} /> {partido.equipoLocal}</span>
                       <span className="text-muted-foreground mx-1">vs</span>
-                      <span className="font-medium">{getBandera(partido.equipoVisitante)} {partido.equipoVisitante}</span>
+                      <span className="font-medium"><Flag pais={partido.equipoVisitante} /> {partido.equipoVisitante}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge
@@ -164,11 +164,11 @@ export default function DashboardPage() {
                 {ultimosResultados.map((partido) => (
                   <div key={partido.id}>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium">{getBandera(partido.equipoLocal)} {partido.equipoLocal}</span>
+                      <span className="font-medium"><Flag pais={partido.equipoLocal} /> {partido.equipoLocal}</span>
                       <span className="text-lg font-bold mx-2">
                         {partido.golesLocal} - {partido.golesVisitante}
                       </span>
-                      <span className="font-medium">{getBandera(partido.equipoVisitante)} {partido.equipoVisitante}</span>
+                      <span className="font-medium"><Flag pais={partido.equipoVisitante} /> {partido.equipoVisitante}</span>
                     </div>
                     <Separator className="mt-2" />
                   </div>

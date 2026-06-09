@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { getBandera } from "@/lib/flags"
+import { banderas } from "@/lib/flags"
+import { Flag } from "@/components/shared/flag"
 import { Save, Lock, CheckCircle2, HelpCircle } from "lucide-react"
 import { toast } from "sonner"
-import { banderas } from "@/lib/flags"
 
 const PRIMER_PARTIDO = new Date("2026-06-11T15:00:00-04:00")
 
@@ -131,7 +131,7 @@ export default function PreguntasClavesPage() {
                       <SelectContent>
                         {equipos.map((eq) => (
                           <SelectItem key={eq} value={eq}>
-                            {getBandera(eq)} {eq}
+                            <Flag pais={eq} /> {eq}
                           </SelectItem>
                         ))}
                       </SelectContent>

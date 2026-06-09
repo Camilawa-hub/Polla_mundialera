@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { MarcadorInput } from "./marcador-input"
 import { formatFechaCorta, partidoBloqueado, getEstadoPuntaje } from "@/lib/utils"
-import { getBandera } from "@/lib/flags"
+import { Flag } from "@/components/shared/flag"
 import { useGuardarPrediccion } from "@/hooks/use-predicciones"
 import { Save, Lock, CheckCircle2, Clock } from "lucide-react"
 import { toast } from "sonner"
@@ -90,7 +90,7 @@ export function PrediccionCard({ partido, prediccion }: PrediccionCardProps) {
 
         <div className="flex items-center justify-center gap-4 mb-4">
           <div className="flex-1 text-right">
-            <span className="font-semibold text-sm">{getBandera(partido.equipoLocal)} {partido.equipoLocal}</span>
+            <span className="font-semibold text-sm"><Flag pais={partido.equipoLocal} /> {partido.equipoLocal}</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export function PrediccionCard({ partido, prediccion }: PrediccionCardProps) {
           </div>
 
           <div className="flex-1 text-left">
-            <span className="font-semibold text-sm">{getBandera(partido.equipoVisitante)} {partido.equipoVisitante}</span>
+            <span className="font-semibold text-sm"><Flag pais={partido.equipoVisitante} /> {partido.equipoVisitante}</span>
           </div>
         </div>
 
@@ -118,8 +118,8 @@ export function PrediccionCard({ partido, prediccion }: PrediccionCardProps) {
           <div className="text-center text-sm text-muted-foreground mb-3">
             Resultado real:{" "}
             <span className="font-bold text-foreground">
-              {getBandera(partido.equipoLocal)} {partido.equipoLocal} {partido.golesLocal} - {partido.golesVisitante}{" "}
-              {getBandera(partido.equipoVisitante)} {partido.equipoVisitante}
+              <Flag pais={partido.equipoLocal} /> {partido.equipoLocal} {partido.golesLocal} - {partido.golesVisitante}{" "}
+              <Flag pais={partido.equipoVisitante} /> {partido.equipoVisitante}
             </span>
           </div>
         )}
