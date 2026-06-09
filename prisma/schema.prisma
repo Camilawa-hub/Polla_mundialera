@@ -26,8 +26,9 @@ model Usuario {
   rol          Rol      @default(PARTICIPANTE)
   fechaCreacion DateTime @default(now()) @map("fecha_creacion")
 
-  predicciones Prediccion[]
-  puntaje      Puntaje?
+  predicciones    Prediccion[]
+  puntaje         Puntaje?
+  respuestasClave RespuestaClave[]
 
   @@map("usuarios")
 }
@@ -65,13 +66,45 @@ model Prediccion {
 }
 
 model Puntaje {
-  id                 String @id @default(cuid())
-  usuarioId          String @unique @map("usuario_id")
-  puntosTotales      Int    @default(0) @map("puntos_totales")
-  resultadosExactos  Int    @default(0) @map("resultados_exactos")
-  ganadoresAcertados Int    @default(0) @map("ganadores_acertados")
+  id                       String @id @default(cuid())
+  usuarioId                String @unique @map("usuario_id")
+  puntosTotales            Int    @default(0) @map("puntos_totales")
+  resultadosExactos        Int    @default(0) @map("resultados_exactos")
+  ganadoresAcertados       Int    @default(0) @map("ganadores_acertados")
+  preguntasClavesAcertadas Int    @default(0) @map("preguntas_claves_acertadas")
+  puntosPreguntasClaves    Int    @default(0) @map("puntos_preguntas_claves")
 
   usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@map("puntajes")
+}
+
+model PreguntaClave {
+  id                String @id @default(cuid())
+  pregunta          String
+  tipo              String  // "SELECCION" | "TEXTO" | "NUMERO"
+  opciones          String? // JSON array para tipo SELECCION
+  respuestaCorrecta String? // la setea el admin post-mundial
+  puntosMaximos     Int     @default(2)
+  activa            Boolean @default(true)
+  orden             Int     @default(0)
+
+  respuestas RespuestaClave[]
+
+  @@map("preguntas_clave")
+}
+
+model RespuestaClave {
+  id              String   @id @default(cuid())
+  usuarioId       String   @map("usuario_id")
+  preguntaClaveId String   @map("pregunta_clave_id")
+  respuesta       String
+  fechaRespuesta  DateTime @default(now()) @map("fecha_respuesta")
+  puntosObtenidos Int?     @map("puntos_obtenidos")
+
+  usuario  Usuario       @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  pregunta PreguntaClave @relation(fields: [preguntaClaveId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, preguntaClaveId])
+  @@map("respuestas_clave")
 }

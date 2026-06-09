@@ -8,6 +8,7 @@ import {
   Home,
   ListChecks,
   History,
+  HelpCircle,
   Users,
   CalendarRange,
   BarChart3,
@@ -18,6 +19,7 @@ import { WorldCupTrophy } from "@/components/shared/world-cup-trophy"
 const participanteLinks = [
   { href: "/dashboard", label: "Inicio", icon: Home },
   { href: "/dashboard/predicciones", label: "Predicciones", icon: ListChecks },
+  { href: "/dashboard/preguntas-claves", label: "Preguntas Claves", icon: HelpCircle },
   { href: "/dashboard/ranking", label: "Ranking", icon: WorldCupTrophy },
   { href: "/dashboard/historial", label: "Historial", icon: History },
 ]
@@ -27,7 +29,8 @@ const adminLinks = [
   { href: "/dashboard/admin/usuarios", label: "Usuarios", icon: Users },
   { href: "/dashboard/admin/partidos", label: "Partidos", icon: CalendarRange },
   { href: "/dashboard/admin/resultados", label: "Resultados", icon: ListChecks },
-  { href: "/dashboard/admin/estadisticas", label: "Estadísticas", icon: BarChart3 },
+  { href: "/dashboard/admin/preguntas-claves", label: "Preg. Claves", icon: HelpCircle },
+  { href: "/dashboard/admin/estadisticas", label: "Estadisticas", icon: BarChart3 },
 ]
 
 export function SidebarContent() {

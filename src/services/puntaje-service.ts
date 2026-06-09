@@ -89,3 +89,65 @@ export async function recalcularPuntajesPartido(partidoId: string) {
 
   await recalcularPuntajes()
 }
+
+export async function recalcularPreguntasClaves(preguntaClaveId: string) {
+  const pregunta = await prisma.preguntaClave.findUnique({
+    where: { id: preguntaClaveId },
+  })
+
+  if (!pregunta?.respuestaCorrecta) return
+
+  const respuestas = await prisma.respuestaClave.findMany({
+    where: { preguntaClaveId },
+  })
+
+  for (const respuesta of respuestas) {
+    const acertada = respuesta.respuesta.toLowerCase().trim() === pregunta.respuestaCorrecta.toLowerCase().trim()
+    const puntos = acertada ? pregunta.puntosMaximos : 0
+
+    await prisma.respuestaClave.update({
+      where: { id: respuesta.id },
+      data: { puntosObtenidos: puntos },
+    })
+  }
+
+  const usuarios = await prisma.usuario.findMany({
+    where: { rol: "PARTICIPANTE" },
+    include: {
+      respuestasClave: {
+        where: { pregunta: { respuestaCorrecta: { not: null } } },
+      },
+      puntaje: true,
+    },
+  })
+
+  for (const usuario of usuarios) {
+    let preguntasClavesAcertadas = 0
+    let puntosPreguntasClaves = 0
+
+    for (const r of usuario.respuestasClave) {
+      if (r.puntosObtenidos && r.puntosObtenidos > 0) {
+        preguntasClavesAcertadas++
+        puntosPreguntasClaves += r.puntosObtenidos
+      }
+    }
+
+    const puntajePartidos = usuario.puntaje?.puntosTotales ?? 0
+    const nuevosTotales = puntajePartidos + puntosPreguntasClaves
+
+    await prisma.puntaje.upsert({
+      where: { usuarioId: usuario.id },
+      update: {
+        preguntasClavesAcertadas,
+        puntosPreguntasClaves,
+        puntosTotales: puntajePartidos + puntosPreguntasClaves,
+      },
+      create: {
+        usuarioId: usuario.id,
+        puntosTotales: nuevosTotales,
+        preguntasClavesAcertadas,
+        puntosPreguntasClaves,
+      },
+    })
+  }
+}

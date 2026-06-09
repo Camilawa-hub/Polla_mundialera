@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator"
 import { formatFechaCorta, partidoBloqueado } from "@/lib/utils"
 import { getBandera } from "@/lib/flags"
 import { WorldCupTrophy } from "@/components/shared/world-cup-trophy"
-import { Target, Users, Clock, ArrowUp, ArrowDown } from "lucide-react"
+import { Target, Users, Clock, ArrowUp, ArrowDown, HelpCircle } from "lucide-react"
 
 export default function DashboardPage() {
   const { data: session } = useSession()
@@ -46,7 +46,7 @@ export default function DashboardPage() {
         <p className="text-muted-foreground">Panel de control de la Polla Mundial 2026</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Mi Puntaje</CardTitle>
@@ -92,6 +92,19 @@ export default function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold">{miPuntaje?.ganadoresAcertados ?? 0}</div>
             <p className="text-xs text-muted-foreground">ganadores acertados</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Preg. Claves</CardTitle>
+            <HelpCircle className="h-4 w-4 text-purple-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{miPuntaje?.puntosPreguntasClaves ?? 0}</div>
+            <p className="text-xs text-muted-foreground">
+              {miPuntaje?.preguntasClavesAcertadas ?? 0} preguntas acertadas
+            </p>
           </CardContent>
         </Card>
       </div>

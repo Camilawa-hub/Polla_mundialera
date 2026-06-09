@@ -144,6 +144,47 @@ async function main() {
     })
   }
 
+  console.log("Creando preguntas claves...")
+
+  const equipos = [
+    "México", "Sudáfrica", "República de Corea", "República Checa",
+    "Canadá", "Bosnia y Herzegovina", "Catar", "Suiza",
+    "Brasil", "Marruecos", "Haití", "Escocia",
+    "Estados Unidos", "Paraguay", "Australia", "Turquía",
+    "Alemania", "Curazao", "Costa de Marfil", "Ecuador",
+    "Países Bajos", "Japón", "Suecia", "Túnez",
+    "Bélgica", "Egipto", "RI de Irán", "Nueva Zelanda",
+    "España", "Cabo Verde", "Arabia Saudí", "Uruguay",
+    "Francia", "Senegal", "Irak", "Noruega",
+    "Argentina", "Argelia", "Austria", "Jordania",
+    "Portugal", "RD de Congo", "Uzbekistán", "Colombia",
+    "Inglaterra", "Croacia", "Ghana", "Panamá",
+  ]
+
+  const preguntas = [
+    { pregunta: "¿Quién será el campeón del Mundial 2026?", tipo: "SELECCION", opciones: JSON.stringify(equipos), orden: 1 },
+    { pregunta: "¿Quién será el máximo goleador (Bota de Oro)?", tipo: "TEXTO", orden: 2 },
+    { pregunta: "¿Quién será el mejor jugador (Balón de Oro)?", tipo: "TEXTO", orden: 3 },
+    { pregunta: "¿Quién será el mejor arquero (Guantes de Oro)?", tipo: "TEXTO", orden: 4 },
+    { pregunta: "¿Cuál será el marcador de la mayor goleada? (ej: Brasil 5-0 Costa Rica)", tipo: "TEXTO", orden: 5 },
+    { pregunta: "¿Cuántas tarjetas (amarillas + rojas) se mostrarán en la fase de grupos?", tipo: "NUMERO", orden: 6 },
+    { pregunta: "¿Qué equipo revelación llegará a cuartos de final o más? (que no sea de los tradicionales grandes)", tipo: "SELECCION", opciones: JSON.stringify(equipos), orden: 7 },
+  ]
+
+  for (const p of preguntas) {
+    await prisma.preguntaClave.create({
+      data: {
+        pregunta: p.pregunta,
+        tipo: p.tipo as "SELECCION" | "TEXTO" | "NUMERO",
+        opciones: p.opciones ?? null,
+        puntosMaximos: 2,
+        orden: p.orden,
+      },
+    })
+  }
+
+  console.log(`Total preguntas claves creadas: ${preguntas.length}`)
+
   console.log("\nSeed completado exitosamente!")
   console.log("\nCredenciales de acceso:")
   console.log("  Admin: usuario=admin / contraseña=Polla2026!")

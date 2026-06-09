@@ -39,7 +39,30 @@ export interface Puntaje {
   puntosTotales: number
   resultadosExactos: number
   ganadoresAcertados: number
+  preguntasClavesAcertadas: number
+  puntosPreguntasClaves: number
   usuario?: Usuario
+}
+
+export interface PreguntaClave {
+  id: string
+  pregunta: string
+  tipo: "SELECCION" | "TEXTO" | "NUMERO"
+  opciones: string | null
+  respuestaCorrecta: string | null
+  puntosMaximos: number
+  activa: boolean
+  orden: number
+}
+
+export interface RespuestaClave {
+  id: string
+  usuarioId: string
+  preguntaClaveId: string
+  respuesta: string
+  fechaRespuesta: string
+  puntosObtenidos: number | null
+  pregunta?: PreguntaClave
 }
 
 export interface Estadisticas {
