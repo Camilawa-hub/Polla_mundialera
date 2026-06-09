@@ -29,6 +29,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
+import { Flag } from "@/components/shared/flag"
+import { equipos } from "@/lib/flags"
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react"
 import { toast } from "sonner"
 import { formatFecha } from "@/lib/utils"
@@ -127,21 +129,39 @@ export default function AdminPartidosPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Equipo Local</Label>
-                  <Input
+                  <Select
                     value={formData.equipoLocal}
-                    onChange={(e) => setFormData((f) => ({ ...f, equipoLocal: e.target.value }))}
-                    placeholder="Ej: Chile"
-                    required
-                  />
+                    onValueChange={(v) => v && setFormData((f) => ({ ...f, equipoLocal: v }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona equipo..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {equipos.map((eq) => (
+                        <SelectItem key={eq} value={eq}>
+                          <Flag pais={eq} /> <span className="ml-2">{eq}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Equipo Visitante</Label>
-                  <Input
+                  <Select
                     value={formData.equipoVisitante}
-                    onChange={(e) => setFormData((f) => ({ ...f, equipoVisitante: e.target.value }))}
-                    placeholder="Ej: Argentina"
-                    required
-                  />
+                    onValueChange={(v) => v && setFormData((f) => ({ ...f, equipoVisitante: v }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecciona equipo..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {equipos.map((eq) => (
+                        <SelectItem key={eq} value={eq}>
+                          <Flag pais={eq} /> <span className="ml-2">{eq}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="space-y-2">

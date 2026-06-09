@@ -62,3 +62,5 @@ export const banderas: Record<string, string> = Object.fromEntries(
 export function getBandera(pais: string): string {
   return ""
 }
+
+export const equipos = Object.keys(banderasCodigo).sort()
