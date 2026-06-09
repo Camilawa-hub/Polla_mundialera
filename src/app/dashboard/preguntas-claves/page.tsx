@@ -34,6 +34,16 @@ export default function PreguntasClavesPage() {
   const [valores, setValores] = useState<Record<string, string>>({})
   const [enviando, setEnviando] = useState(false)
 
+  useEffect(() => {
+    if (respuestas && respuestas.length > 0 && Object.keys(valores).length === 0) {
+      const inicial: Record<string, string> = {}
+      for (const r of respuestas) {
+        inicial[r.preguntaClaveId] = r.respuesta
+      }
+      setValores(inicial)
+    }
+  }, [respuestas])
+
   if (loadingPreguntas || loadingRespuestas) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -46,16 +56,6 @@ export default function PreguntasClavesPage() {
 
   const respuestasMap = new Map(respuestas?.map((r) => [r.preguntaClaveId, r]) ?? [])
   const tieneRespuestas = respuestas && respuestas.length > 0
-
-  useEffect(() => {
-    if (tieneRespuestas && Object.keys(valores).length === 0) {
-      const inicial: Record<string, string> = {}
-      for (const r of respuestas!) {
-        inicial[r.preguntaClaveId] = r.respuesta
-      }
-      setValores(inicial)
-    }
-  }, [respuestas])
 
   const preguntasActivas = preguntas?.filter((p) => p.activa) ?? []
 

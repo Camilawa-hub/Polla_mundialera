@@ -16,9 +16,9 @@ export function Navbar() {
       <div className="flex h-14 items-center px-4 gap-4">
         <Sheet>
           <SheetTrigger>
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <span className="md:hidden inline-flex items-center justify-center rounded-md p-2 hover:bg-accent cursor-pointer">
               <Menu className="h-5 w-5" />
-            </Button>
+            </span>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64">
             <div className="p-6 border-b">

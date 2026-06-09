@@ -19,6 +19,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET,
   providers: [
     Credentials({
       name: "credentials",
@@ -27,27 +28,41 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Contraseña", type: "password" },
       },
       async authorize(credentials) {
-        const { username, password } = credentials as {
-          username: string
-          password: string
-        }
+        try {
+          const { username, password } = credentials as {
+            username: string
+            password: string
+          }
 
-        const usuario = await prisma.usuario.findUnique({
-          where: { username },
-        })
+          const usuario = await prisma.usuario.findUnique({
+            where: { username },
+          })
 
-        if (!usuario) return null
+          if (!usuario) {
+            throw new Error("USUARIO_NO_ENCONTRADO")
+          }
 
-        const passwordMatch = await bcrypt.compare(password, usuario.passwordHash)
+          const passwordMatch = await bcrypt.compare(password, usuario.passwordHash)
 
-        if (!passwordMatch) return null
+          if (!passwordMatch) {
+            throw new Error("CONTRASENA_INCORRECTA")
+          }
 
-        return {
-          id: usuario.id,
-          name: usuario.nombre,
-          email: usuario.username,
-          rol: usuario.rol,
-          nombre: usuario.nombre,
+          return {
+            id: usuario.id,
+            name: usuario.nombre,
+            email: usuario.username,
+            rol: usuario.rol,
+            nombre: usuario.nombre,
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            if (error.message === "USUARIO_NO_ENCONTRADO" || error.message === "CONTRASENA_INCORRECTA") {
+              throw error
+            }
+            throw new Error("ERROR_CONEXION_BD")
+          }
+          return null
         }
       },
     }),

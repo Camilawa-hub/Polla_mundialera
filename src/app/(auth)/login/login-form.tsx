@@ -39,7 +39,17 @@ export function LoginForm() {
       })
 
       if (result?.error) {
-        setError("Usuario o contraseña incorrectos")
+        if (result.error === "USUARIO_NO_ENCONTRADO") {
+          setError("El usuario ingresado no existe en el sistema")
+        } else if (result.error === "CONTRASENA_INCORRECTA") {
+          setError("La contraseña ingresada es incorrecta")
+        } else if (result.error === "ERROR_CONEXION_BD") {
+          setError("Error de conexión con la base de datos. Verifica que DATABASE_URL sea correcta en .env.local")
+        } else if (result.error === "CredentialsSignin" || result.error === "credentials") {
+          setError("Usuario o contraseña incorrectos")
+        } else {
+          setError(`Error inesperado: ${result.error}`)
+        }
         return
       }
 

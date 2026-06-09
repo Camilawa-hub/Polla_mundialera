@@ -1,20 +1,14 @@
-import { getBandera } from "@/lib/flags"
-
-const imgFlags: Record<string, string> = {
-  "Escocia": "https://hatscripts.github.io/circle-flags/flags/gb-sct.svg",
-  "Inglaterra": "https://hatscripts.github.io/circle-flags/flags/gb-eng.svg",
-}
+import { getFlagUrl } from "@/lib/flags"
 
 export function Flag({ pais, className = "" }: { pais: string; className?: string }) {
-  const imgUrl = imgFlags[pais]
-  if (imgUrl) {
-    return (
-      <img
-        src={imgUrl}
-        alt={pais}
-        className={`inline-block w-5 h-5 align-text-bottom ${className}`}
-      />
-    )
-  }
-  return <span className={className}>{getBandera(pais)}</span>
+  const src = getFlagUrl(pais)
+  if (!src) return <span className={`inline-block w-5 h-4 bg-muted rounded ${className}`} />
+  return (
+    <img
+      src={src}
+      alt={pais}
+      className={`inline-block w-5 h-4 align-text-bottom ${className}`}
+      loading="lazy"
+    />
+  )
 }
