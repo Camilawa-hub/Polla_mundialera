@@ -167,7 +167,7 @@ async function main() {
     { pregunta: "¿Quién será el mejor jugador (Balón de Oro)?", tipo: "TEXTO", orden: 3 },
     { pregunta: "¿Quién será el mejor arquero (Guantes de Oro)?", tipo: "TEXTO", orden: 4 },
     { pregunta: "¿Cuál será el marcador de la mayor goleada? (ej: Brasil 5-0 Costa Rica)", tipo: "TEXTO", orden: 5 },
-    { pregunta: "¿Cuántas tarjetas (amarillas + rojas) se mostrarán en la fase de grupos?", tipo: "NUMERO", orden: 6 },
+    { pregunta: "¿Qué equipo recibirá más tarjetas? (la tarjeta roja vale doble)", tipo: "TEXTO", orden: 6 },
     { pregunta: "¿Qué equipo revelación llegará a cuartos de final o más? (que no sea de los tradicionales grandes)", tipo: "SELECCION", opciones: JSON.stringify(equipos), orden: 7 },
   ]
 
