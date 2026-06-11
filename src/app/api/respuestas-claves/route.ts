@@ -3,8 +3,6 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { respuestaClaveSchema } from "@/validations/pregunta-clave-schema"
 
-const PRIMER_PARTIDO = new Date("2026-06-11T15:00:00-04:00")
-
 export async function GET(req: Request) {
   const session = await auth()
   if (!session?.user) {
@@ -39,18 +37,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 
-  if (session.user.rol !== "ADMIN" && new Date() >= PRIMER_PARTIDO) {
-    return NextResponse.json(
-      { error: "El periodo de respuestas ha terminado (primer partido ya comenzó)" },
-      { status: 400 }
-    )
-  }
-
   const body = await req.json()
   const parsed = respuestaClaveSchema.safeParse(body)
 
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
+  }
+
+  const pregunta = await prisma.preguntaClave.findUnique({
+    where: { id: parsed.data.preguntaClaveId },
+  })
+
+  if (!pregunta) {
+    return NextResponse.json({ error: "Pregunta no encontrada" }, { status: 404 })
+  }
+
+  if (pregunta.bloqueada && session.user.rol !== "ADMIN") {
+    return NextResponse.json(
+      { error: "Esta pregunta está bloqueada por el administrador" },
+      { status: 400 }
+    )
   }
 
   const existente = await prisma.respuestaClave.findUnique({
@@ -63,9 +69,9 @@ export async function POST(req: Request) {
   })
 
   if (existente) {
-    if (new Date() >= PRIMER_PARTIDO) {
+    if (pregunta.bloqueada && session.user.rol !== "ADMIN") {
       return NextResponse.json(
-        { error: "Ya respondiste esta pregunta y el periodo terminó" },
+        { error: "Esta pregunta está bloqueada por el administrador" },
         { status: 400 }
       )
     }

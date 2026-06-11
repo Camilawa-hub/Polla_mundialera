@@ -21,8 +21,6 @@ import { Flag } from "@/components/shared/flag"
 import { Save, Lock, CheckCircle2, HelpCircle } from "lucide-react"
 import { toast } from "sonner"
 
-const PRIMER_PARTIDO = new Date("2026-06-11T15:00:00-04:00")
-
 const equipos = Object.keys(banderas).sort()
 
 export default function PreguntasClavesPage() {
@@ -52,15 +50,14 @@ export default function PreguntasClavesPage() {
     )
   }
 
-  const bloqueado = new Date() >= PRIMER_PARTIDO
-
   const respuestasMap = new Map(respuestas?.map((r) => [r.preguntaClaveId, r]) ?? [])
   const tieneRespuestas = respuestas && respuestas.length > 0
 
   const preguntasActivas = preguntas?.filter((p) => p.activa) ?? []
+  const todasBloqueadas = preguntasActivas.every((p) => p.bloqueada)
 
   async function handleGuardar() {
-    if (!session?.user?.id || bloqueado) return
+    if (!session?.user?.id) return
     setEnviando(true)
 
     try {
@@ -90,24 +87,25 @@ export default function PreguntasClavesPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Preguntas Claves</h1>
         <p className="text-muted-foreground">
-          Responde estas preguntas antes del inicio del Mundial (11 junio 2026 15:00).
-          {bloqueado
-            ? " El periodo de respuestas ya terminó."
-            : " Tus respuestas no se podrán modificar después."}
+          Responde estas preguntas antes de que el administrador las bloquee.
+          {todasBloqueadas
+            ? " Todas las preguntas están bloqueadas."
+            : " Una vez bloqueadas no se podrán modificar."}
         </p>
       </div>
 
-      <Card className={bloqueado ? "opacity-90" : ""}>
+      <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <HelpCircle className="h-5 w-5 text-primary" />
-            {bloqueado ? "Respuestas bloqueadas" : "Tus pronósticos especiales"}
+            Tus pronósticos especiales
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {preguntasActivas.map((pregunta, idx) => {
             const respuesta = respuestasMap.get(pregunta.id)
             const valorActual = valores[pregunta.id] ?? respuesta?.respuesta ?? ""
+            const bloqueada = pregunta.bloqueada
 
             return (
               <div key={pregunta.id}>
@@ -117,13 +115,18 @@ export default function PreguntasClavesPage() {
                     <span className="text-xs text-muted-foreground ml-2">
                       ({pregunta.puntosMaximos} pts)
                     </span>
+                    {bloqueada && (
+                      <span className="text-xs text-amber-500 ml-2">
+                        (bloqueada)
+                      </span>
+                    )}
                   </Label>
 
                   {pregunta.tipo === "SELECCION" ? (
                     <Select
                       value={valorActual}
                       onValueChange={(v) => v && handleChange(pregunta.id, v)}
-                      disabled={bloqueado || !!respuesta}
+                      disabled={bloqueada}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecciona un equipo..." />
@@ -143,14 +146,14 @@ export default function PreguntasClavesPage() {
                       placeholder="Ingresa un número..."
                       value={valorActual}
                       onChange={(e) => handleChange(pregunta.id, e.target.value)}
-                      disabled={bloqueado || !!respuesta}
+                      disabled={bloqueada}
                     />
                   ) : (
                     <Input
                       placeholder="Escribe tu respuesta..."
                       value={valorActual}
                       onChange={(e) => handleChange(pregunta.id, e.target.value)}
-                      disabled={bloqueado || !!respuesta}
+                      disabled={bloqueada}
                     />
                   )}
 
@@ -172,7 +175,7 @@ export default function PreguntasClavesPage() {
             )
           })}
 
-          {!bloqueado && (
+          {!todasBloqueadas && (
             <div className="flex justify-end pt-4">
               <Button
                 onClick={handleGuardar}
@@ -188,10 +191,10 @@ export default function PreguntasClavesPage() {
             </div>
           )}
 
-          {bloqueado && (
+          {todasBloqueadas && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
               <Lock className="h-4 w-4" />
-              Respuestas bloqueadas — el Mundial ya comenzó
+              Todas las preguntas están bloqueadas por el administrador
             </div>
           )}
         </CardContent>

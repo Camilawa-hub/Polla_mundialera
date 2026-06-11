@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { CheckCircle2, Trophy, Loader2 } from "lucide-react"
+import { CheckCircle2, Trophy, Loader2, Lock, Unlock } from "lucide-react"
 import { toast } from "sonner"
 import type { RespuestaClave } from "@/types"
 
@@ -46,6 +46,30 @@ export default function AdminPreguntasClavesPage() {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     )
+  }
+
+  async function handleToggleBloqueo(preguntaId: string, actual: boolean) {
+    setCargando((prev) => ({ ...prev, [`bloqueo-${preguntaId}`]: true }))
+
+    try {
+      const res = await fetch(`/api/preguntas-claves/${preguntaId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bloqueada: !actual }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || "Error al cambiar bloqueo")
+      }
+
+      toast.success(actual ? "Pregunta desbloqueada" : "Pregunta bloqueada")
+      refetch()
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Error al cambiar bloqueo")
+    } finally {
+      setCargando((prev) => ({ ...prev, [`bloqueo-${preguntaId}`]: false }))
+    }
   }
 
   async function handleAsignarCorrecta(preguntaId: string) {
@@ -101,9 +125,14 @@ export default function AdminPreguntasClavesPage() {
                     <span>
                       {idx + 1}. {pregunta.pregunta}
                     </span>
-                    <Badge variant={yaTieneCorrecta ? "default" : "secondary"}>
-                      {yaTieneCorrecta ? "✔ Corregida" : "Pendiente"}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge variant={pregunta.bloqueada ? "destructive" : "secondary"}>
+                        {pregunta.bloqueada ? "Bloqueada" : "Abierta"}
+                      </Badge>
+                      <Badge variant={yaTieneCorrecta ? "default" : "secondary"}>
+                        {yaTieneCorrecta ? "✔ Corregida" : "Pendiente"}
+                      </Badge>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -126,6 +155,20 @@ export default function AdminPreguntasClavesPage() {
                         <Trophy className="h-4 w-4 mr-2" />
                       )}
                       Asignar
+                    </Button>
+                    <Button
+                      variant={pregunta.bloqueada ? "destructive" : "outline"}
+                      onClick={() => handleToggleBloqueo(pregunta.id, pregunta.bloqueada)}
+                      disabled={cargando[`bloqueo-${pregunta.id}`]}
+                    >
+                      {cargando[`bloqueo-${pregunta.id}`] ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : pregunta.bloqueada ? (
+                        <Unlock className="h-4 w-4 mr-2" />
+                      ) : (
+                        <Lock className="h-4 w-4 mr-2" />
+                      )}
+                      {pregunta.bloqueada ? "Desbloquear" : "Bloquear"}
                     </Button>
                   </div>
 

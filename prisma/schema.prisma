@@ -85,6 +85,7 @@ model PreguntaClave {
   tipo              String  // "SELECCION" | "TEXTO" | "NUMERO"
   opciones          String? // JSON array para tipo SELECCION
   respuestaCorrecta String? // la setea el admin post-mundial
+  bloqueada         Boolean @default(false)
   puntosMaximos     Int     @default(2)
   activa            Boolean @default(true)
   orden             Int     @default(0)

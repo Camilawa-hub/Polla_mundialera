@@ -50,6 +50,7 @@ export interface PreguntaClave {
   tipo: "SELECCION" | "TEXTO" | "NUMERO"
   opciones: string | null
   respuestaCorrecta: string | null
+  bloqueada: boolean
   puntosMaximos: number
   activa: boolean
   orden: number
